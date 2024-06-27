@@ -83,6 +83,7 @@ function init_shader(gl, vert_src, frag_src) {
 	return shader_program;
 }
 
+const search_box = document.getElementById('search-box');
 const text_container = document.querySelector('.text-container');
 const rect_container = document.querySelector('.rect-container');
 
@@ -206,11 +207,11 @@ function set_error(code) {
 	}
 }
 
+const memory = new WebAssembly.Memory({ initial: 2000, maximum: 65536 });
 async function init() {
 	// set default error message to bug in case we get a module-level error
 	set_error(2);
 
-	const memory = new WebAssembly.Memory({ initial: 2000, maximum: 65536 });
 
 	try {
 		window.wasm = await window.odin.runWasm(`spall.wasm`, null, memory, {
@@ -412,6 +413,13 @@ async function init() {
 		load_file(file);
 	}, false);
 
+	const textEncoder = new TextEncoder();
+	search_box.addEventListener("input", (event) => {
+		console.log(search_box.value)
+		window.wasm.updateSearchTerm(...str(search_box.value))
+		wakeUp()
+	}, false);
+
 	let awake = false;
 	function wakeUp() {
 		if (awake) {
@@ -497,7 +505,8 @@ async function init() {
 		wakeUp();
 	});
 	window.addEventListener('mousedown', e => {
-		if (e.button != 0) {
+		//Allow both left and middle mouse to pan
+		if (e.button != 0 && e.button != 1) {
 			return;
 		}
 
@@ -568,6 +577,10 @@ async function init() {
 		wakeUp();
 	}
 	window.addEventListener('keydown', e => {
+		if(search_box.matches(':focus')){
+			return;
+		}
+
 		if (e.key.length > 1) {
 			specialKeyEvent('down', e);
 		} else if ( !(e.ctrlKey || e.metaKey) || e.code == 'KeyA' || e.code == 'KeyZ') {
@@ -576,6 +589,10 @@ async function init() {
 		wakeUp();
 	});
 	window.addEventListener('keyup', e => {
+		if(search_box.matches(':focus')){
+			return;
+		}
+
 		if (e.key.length > 1) {
 			specialKeyEvent('up', e);
 		}

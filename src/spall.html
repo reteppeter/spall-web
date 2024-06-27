@@ -17,17 +17,17 @@
 
 			.text-container {
 				position: absolute;
-				top: 0;
+				top: 25px;
 				left: 0;
 				width: 100%;
-				height: 100%;
+				height: calc(100% - 25px);
 			}
 			.rect-container {
 				position: absolute;
-				top: 0;
+				top: 25px;
 				left: 0;
 				width: 100%;
-				height: 100%;
+				height: calc(100% - 25px);
 			}
 
 			.text-container.hide {
@@ -110,6 +110,7 @@
 		<div style="display:none">
 			<input type="file" id="file-dialog" />
 		</div>
+		<div id="search-display" class="search-container"><input id="search-box" type="text"></input></div>
 		<div id="rect-display" class="rect-container"><canvas id="rect-canvas"></canvas></div>
 		<div id="text-display" class="text-container"><canvas id="text-canvas"></canvas></div>
 		<div id="error" class="error-box hide">

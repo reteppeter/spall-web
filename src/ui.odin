@@ -640,6 +640,9 @@ draw_flamegraphs :: proc(trace: ^Trace, start_time, end_time: i64, ui_state: ^UI
 								rect_color = grey
 							}
 						}
+						if !(strings.compare(ui_state.searchString, "") == 0) {
+							rect_color = grey
+						}
 
 						append(&gl_rects,
 							DrawRect{f32(dr.x), f32(dr.w), BVec4{u8(rect_color.x), u8(rect_color.y), u8(rect_color.z), 255}})
@@ -696,6 +699,9 @@ draw_flamegraphs :: proc(trace: ^Trace, start_time, end_time: i64, ui_state: ^UI
 								} else {
 									rect_color = grey
 								}
+							}
+							if !strings.contains(ev_name, ui_state.searchString) && !(strings.compare(ui_state.searchString, "") == 0) {
+								rect_color = grey
 							}
 
 							if int(selected_event.pid) == p_idx && int(selected_event.tid) == t_idx &&
@@ -1013,6 +1019,9 @@ draw_minimap :: proc(trace: ^Trace, ui_state: ^UIState) {
 								rect_color = grey
 							}
 						}
+						if !(strings.compare(ui_state.searchString, "") == 0) {
+							rect_color = grey
+						}
 
 						append(&gl_rects, DrawRect{f32(r_x), f32(r_w), BVec4{u8(rect_color.x), u8(rect_color.y), u8(rect_color.z), 255}})
 						continue
@@ -1057,6 +1066,10 @@ draw_minimap :: proc(trace: ^Trace, ui_state: ^UIState) {
 								} else {
 									rect_color = grey
 								}
+							}
+							ev_name := in_getstr(&trace.string_block, ev.name)
+							if !strings.contains(ev_name, ui_state.searchString) && !(strings.compare(ui_state.searchString, "") == 0) {
+								rect_color = grey
 							}
 
 							append(&gl_rects, DrawRect{f32(r_x), f32(r_w), BVec4{u8(rect_color.x), u8(rect_color.y), u8(rect_color.z), 255}})

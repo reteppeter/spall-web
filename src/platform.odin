@@ -4,6 +4,7 @@ import "base:intrinsics"
 
 import "core:mem"
 import "core:fmt"
+import "core:strings"
 
 trap :: proc "contextless" () -> ! {
 	intrinsics.trap()
@@ -98,6 +99,16 @@ key_up :: proc "contextless" (key: i32) {
 	}
 }
 
+@export
+updateSearchTerm :: proc "contextless" (term: string) {
+	context = wasmContext
+
+	
+	b := strings.builder_from_slice(_trace.file_name_store[:])
+	strings.write_string(&b, term)
+	ui_state.searchString  = strings.to_string(b)
+}
+
 // release all control state if the user tabs away
 
 intentional_blur := false
@@ -133,6 +144,11 @@ temp_allocate :: proc(n: i32) -> rawptr {
 	    push_fatal(SpallError.OutOfMemory)
     }
     return ptr
+}
+
+@export
+temp_deallocate :: proc(p: rawptr) {
+    mem.free(p)
 }
 
 // This is gross..

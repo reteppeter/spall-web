@@ -46,6 +46,8 @@ UIState :: struct {
 	filter_pane_scroll_pos: f64,
 	filter_pane_scroll_vel: f64,
 
+	searchString: string,
+
 	stats_pane_rect:      Rect,
 	stats_pane_scroll_pos: f64,
 	stats_pane_scroll_vel: f64,
